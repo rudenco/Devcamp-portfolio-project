@@ -1,0 +1,99 @@
+import React , { Component } from "react";
+import axios from "axios";
+
+import PortfolioSidebarList from "../portfolio/portfolio-sidebar-list";
+import PortfolioForm from "../portfolio/portfolio-form";
+
+export default class PortfolioManager extends Component {
+    constructor() {
+        super();
+
+        this.state = {
+            portfoloItems: [],
+            portfolioToEdit : {}
+        }
+
+        this.handleSuccessfulFormSubmission = this.handleSuccessfulFormSubmission.bind(this);
+        this.handleFormSubmissionError  = this.handleFormSubmissionError.bind(this);
+        this.handleDeleteClick = this.handleDeleteClick.bind(this);
+        this.handleEditClick = this.handleEditClick.bind(this);
+        this.clearPortfolioToEdit = this.clearPortfolioToEdit.bind(this);
+    }   
+
+    clearPortfolioToEdit() {
+        this.setState({
+            portfolioToEdit: {}
+        })
+    }
+
+    handleEditClick(portfolioItem) {
+        this.setState({
+            portfolioToEdit: portfolioItem
+        });
+    }
+
+    handleDeleteClick(portfolioItem) {
+        axios.delete(`
+            https://api.devcamp.space/portfolio/portfolio_items/${portfolioItem.id}`,
+            {withCredentials: true}
+        ).then(response => {
+            this.setState({
+                portfoloItems: this.state.portfoloItems.filter(item => {
+                    return item.id !== portfolioItem.id;
+                })
+            })
+
+            return  response.data;x
+        }).catch(error => {
+            console.log("handleDeleteClick error", error)
+        })
+    }
+
+    handleSuccessfulFormSubmission(portfolioItem) {
+        this.setState({
+            portfoloItems: [portfolioItem].concat(this.state.portfoloItems)
+        });
+    }
+
+    handleFormSubmissionError(error) {
+        console.log("handleFormSubmissionError error " , error);
+    }
+
+    getPortfolioItems() {
+        axios.get("https://viteok.devcamp.space/portfolio/portfolio_items?order_by=created_at&direction=desc", { 
+            withCredentials: true
+        }).then(response => {
+            this.setState({
+                portfoloItems: [...response.data.portfolio_items]
+            })
+        }).catch(errpr => {
+            console.log("error in getPortfolioItems", error);
+        })
+    }
+
+    componentDidMount() {
+        this.getPortfolioItems();
+    }
+
+    render() {
+        return(
+            <div className="portfolio-manager-wrapper">
+                <div className="left-column" >
+                    <PortfolioForm 
+                        handleSuccessfulFormSubmission={this.handleSuccessfulFormSubmission}
+                        handleFormSubmissionError = {this.handleFormSubmissionError}
+                        clearPortfolioToEdit={this.clearPortfolioToEdit}
+                        portfolioToEdit={this.state.portfolioToEdit}
+                    />
+                </div>
+                <div className="right-column" >
+                    <PortfolioSidebarList 
+                    handleDeleteClick={this.handleDeleteClick}
+                    data={this.state.portfoloItems}
+                    handleEditClick={this.handleEditClick}    
+                />
+                </div>
+            </div>
+        );
+    }
+}
