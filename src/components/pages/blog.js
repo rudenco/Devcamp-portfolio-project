@@ -13,6 +13,13 @@ export default class Blog extends Component {
         }
 
         this.getBlogItems = this.getBlogItems.bind(this);
+        this.activateInfiniteScrol();
+    }
+
+    activateInfiniteScrol() {
+        window.onscroll = () => {
+            console.log("onscroll");
+        }
     }
 
     getBlogItems() {
@@ -35,9 +42,12 @@ export default class Blog extends Component {
         const blogRecords = this.state.blogItems.map(blogItem => {
             return <BlogItem key={blogItem.id} blogItem={blogItem} />;
         });
-        return(
-            <div>
+
+        return (
+            <div className="blog-container">
+            <div className="content-container">
                 {blogRecords}
+            </div>
             </div>
         );
     }
