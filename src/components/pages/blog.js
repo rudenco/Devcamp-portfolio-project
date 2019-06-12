@@ -103,7 +103,7 @@ export default class Blog extends Component {
 
                 <div className="new-blog-link">
                 <a onClick={this.handleNewBlogClick}>
-                    Open Modal !
+                    <FontAwesomeIcon icon="plus-circle" />
                 </a>
                 </div>
 

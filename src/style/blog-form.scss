@@ -1,0 +1,13 @@
+.blog-form-wrapper {
+    grid-gap: 21px;
+    grid-template-columns:  1fr;
+    padding: 42px; 
+ //    border: 1px solid red;
+ 
+    @include input-element();
+    input {
+       margin-bottom: 10px;
+       // border: 1px solid red;
+ 
+    }
+}
