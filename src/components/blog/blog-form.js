@@ -1,17 +1,25 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 
+import RichTextEditor from "../forms/rich-text-editor";
+
 export default class BlogForm extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             title: "",
-            blog_status: ""
+            blog_status: "",
+            content: ""
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleRichTextEditorChange = this.handleRichTextEditorChange.bind(this);
+    }
+
+    handleRichTextEditorChange(content) {
+        this.setState({ content })
     }
 
     buildForm() {
@@ -19,6 +27,9 @@ export default class BlogForm extends Component {
 
         formData.append("portfolio_blog[title]",this.state.title);
         formData.append("portfolio_blog[blog_status]",this.state.blog_status);
+        formData.append("portfolio_blog[content]",this.state.content);
+
+
 
         return formData;
     }
@@ -29,14 +40,14 @@ export default class BlogForm extends Component {
             this.buildForm(),
             {withCredentials: true}
          ).then(response => {
+            this.setState({
+                title: "",
+                blog_status: "",
+                content: ""
+            })
             this.props.handleSuccessfulFormSubmission(
                 response.data.portfolio_blog
             );             
-
-            this.setState({
-                title: "",
-                blog_status: ""
-            })
          }).catch(error => {
              console.log("handleSubmit for blog error", error);
          });
@@ -75,7 +86,11 @@ export default class BlogForm extends Component {
                     type="text" 
                 />
             </div>
-                <button className="btn">Save</button>
+
+            <div className="one-column">
+                <RichTextEditor handleRichTextEditorChange={this.handleRichTextEditorChange}/>
+            </div>
+            <button className="btn">Save</button>
             </form>
         );
     }

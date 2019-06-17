@@ -5,7 +5,6 @@ import {
   Route
 } from 'react-router-dom';
 import axios from "axios";
-import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import PortfolioContainer from "./portfolio/portfolio-container";
