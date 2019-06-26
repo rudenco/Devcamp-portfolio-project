@@ -10,4 +10,10 @@
        // border: 1px solid red;
  
     }
+
+    .image-uploaders {
+      @include base-grid();
+       grid-template-columns: 200px;
+       margin-bottom : 20px;
+   }
 }
